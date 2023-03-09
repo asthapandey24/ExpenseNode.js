@@ -11,7 +11,7 @@ function saveinLocalStorage(event){
 
 
 
-    axios.post(`http://localhost:3000/expensetable/signUp`,myObj )
+    axios.post(`http://localhost:3000/user/signUp`,myObj )
      .then((response)=>{
       //  displayUser(myObj)
         console.log(response) 
@@ -20,5 +20,5 @@ function saveinLocalStorage(event){
         document.body.innerHTML = document.body.innerHTML + "<h4> Something went wrong </h4>"
         console.log(err)
      })
-     
+
     }
