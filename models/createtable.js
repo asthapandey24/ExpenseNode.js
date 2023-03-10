@@ -10,11 +10,12 @@ const User = sequelize.define('user',{
     primaryKey: true
   },
   name: {
-    type: Sequelize.STRING
+    type: Sequelize.STRING,
     
   },
   email: {
     type: Sequelize.STRING,
+    allowNull: false,
     unique: true
 
   },
