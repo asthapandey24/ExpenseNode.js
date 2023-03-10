@@ -2,34 +2,30 @@ const express=require('express');
 const app=express();
 
 const bodyParser=require('body-parser');
-
+const router =require('./routes/router.js');
 
 var cors = require('cors');
 const sequelize = require('./util/database.js');
 
-const User = require('./models/createtable.js');
+//const User = require('./models/createtable.js');
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
 
-
+app.use( '/user',router);
 
 // without routing testing
 
-app.post('/user/signUp',async(req,res,next)=>{    
-                 const name = req.body.name;
-                const email = req.body.email;
-                 const password =  req.body.password;
-               const data = await User.create({name: name, email: email, password: password});
-                res.status(201).json({details: data})
+// app.post('/user/signUp',async(req,res,next)=>{    
+//                  const name = req.body.name;
+//                 const email = req.body.email;
+//                  const password =  req.body.password;
+//                const data = await User.create({name: name, email: email, password: password});
+//                 res.status(201).json({details: data})
     
-                })
-
-
-
-
+//                 })
 
 
 

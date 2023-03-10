@@ -1,4 +1,4 @@
-function saveinLocalStorage(event){
+function signup(event){
     event.preventDefault();
     const name = event.target.name.value;
     const email = event.target.email.value;
@@ -9,9 +9,7 @@ function saveinLocalStorage(event){
         password
     }
 
-
-
-    axios.post(`http://localhost:3000/user/signUp`,myObj )
+    axios.post('http://localhost:3000/user/signup',myObj )
      .then((response)=>{
       //  displayUser(myObj)
         console.log(response) 
@@ -22,3 +20,5 @@ function saveinLocalStorage(event){
      })
 
     }
+
+    
