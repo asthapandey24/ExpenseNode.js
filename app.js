@@ -7,7 +7,7 @@ const router =require('./routes/router.js');
 var cors = require('cors');
 const sequelize = require('./util/database.js');
 
-//const User = require('./models/createtable.js');
+const User = require('./models/createtable.js');
 
 
 app.use(bodyParser.urlencoded({ extended: false }));

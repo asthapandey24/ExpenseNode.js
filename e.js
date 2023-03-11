@@ -1,9 +1,9 @@
 function signup(event){
     event.preventDefault();
-    const name = event.target.name.value;
-    const email = event.target.email.value;
-    const password = event.target.password.value;
-    const myObj = {
+    let name = event.target.name.value;
+    let email = event.target.email.value;
+    let password = event.target.password.value;
+    let myObj = {
         name,
         email,
         password
