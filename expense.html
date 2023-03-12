@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form onsubmit="expenseStorage(event)">
+        <div>
+            <label for="expense">choose expndituremoney</label>
+            <input type="number" id="id0"  name="expense" >
+            <label for="Discription">choose a Discription</label>
+            <input type="text" id="id1"  name="discription">
+        <label for="category">choose a category</label>
+        <select name="category" id ="id2">
+         <option value="movie">movie</option>
+        <option value="food">food</option>
+         <option value="travelling">travelling</option>
+         </select>
+         <button >Add-Expense </button>
+        </div>
+        </form>
+        <ul id="Users"></ul>
+        <script src=" https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
+         <script src="expense.js"></script>
+
+</body>
+</html>

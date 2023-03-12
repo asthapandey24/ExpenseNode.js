@@ -3,6 +3,7 @@ const app=express();
 
 const bodyParser=require('body-parser');
 const router =require('./routes/router.js');
+const expenseRouter = require('./routes/expenseroute.js')
 
 var cors = require('cors');
 const sequelize = require('./util/database.js');
@@ -15,6 +16,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.use( '/user',router);
+app.use('/expensetable', expenseRouter)
 
 // without routing testing
 

@@ -8,10 +8,11 @@ function login(event){
     axios.post('http://localhost:3000/user/login',logindetails)
     .then((response)=>{
         alert(response.data.message)
+        window.location.href = "expense.html";
     }).catch((err)=>{
 
         document.body.innerHTML = document.body.innerHTML + "<h4> user doesn't match </h4>"
-        console.log(JSON.stringify(err))
+       console.log(err)
     })
 
 }

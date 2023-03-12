@@ -36,7 +36,7 @@ const bcrypt = require('bcrypt')
    exports.login = async(req, res)=>{
     try{
     const {email, password} = req.body;
-    if(isstringValid(name)|| isstringValid(email)|| isstringValid(password)){
+    if(isstringValid(email)|| isstringValid(password)){
       res.status(400).json({msg: 'something is missing'})
     }
     console.log(password)
