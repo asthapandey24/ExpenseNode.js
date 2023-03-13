@@ -1,6 +1,7 @@
 
 const User = require('../models/createtable.js');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
   function isstringValid(string){
  if(string == undefined || string.length ===0 ){
@@ -33,6 +34,12 @@ const bcrypt = require('bcrypt')
 
    }
 
+   function generateToken(id, name){
+    return jwt.sign({userId: id , name: name} , 'mySecretKey')
+   }
+
+
+
    exports.login = async(req, res)=>{
     try{
     const {email, password} = req.body;
@@ -44,7 +51,7 @@ const bcrypt = require('bcrypt')
         if(user.length>0){
          bcrypt.compare(password, user[0].password, (err, response)=>{
         if(response == true){
-           res.status(200).json({success: true, message: 'user logged in successfully'})
+           res.status(200).json({success: true, message: 'user logged in successfully', token: generateToken(user[0].id, user[0].name)})
           }
         else if(err){
                 return res.status(500).json({message: 'something went wrong'})

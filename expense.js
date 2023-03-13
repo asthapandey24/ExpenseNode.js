@@ -9,11 +9,14 @@ function expenseStorage(event){
         category
     }
 
+console.log(myObj)
+const token = localStorage.getItem('token')
 
 
-axios.post(`http://localhost:3000/expensetable/add-user`,myObj )
+
+axios.post('http://localhost:3000/expensetable/add-user',myObj,{headers: {"Authorization": token}} )
 .then((response)=>{
-   displayUser(myObj)
+   displayUser(response.data.details)
    console.log(response) 
 })
 .catch((err)=>{
@@ -29,7 +32,8 @@ axios.post(`http://localhost:3000/expensetable/add-user`,myObj )
 
 
 window.addEventListener('DOMContentLoaded', (event) => { 
-axios.get('http://localhost:3000/expensetable/get-user')
+  const token = localStorage.getItem('token')
+axios.get('http://localhost:3000/expensetable/get-user', {headers: {"Authorization": token}})
   .then((response) =>{
    console.log(response)
    for(var i=0; i< response.data.details.length; i++){
@@ -59,7 +63,8 @@ parentNode.innerHTML = parentNode.innerHTML + childHTML;
 
 
 function deleteUser(userId){
- axios.delete(`http://localhost:3000/expensetable/delete-user/${userId}`)
+  const token = localStorage.getItem('token')
+ axios.delete(`http://localhost:3000/expensetable/delete-user/${userId}`, {headers:{"Authorization": token}})
  .then((response)=>{
    removeItemfromScreen(userId);
    console.log(response)

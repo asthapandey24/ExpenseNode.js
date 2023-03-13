@@ -8,7 +8,8 @@ function login(event){
     axios.post('http://localhost:3000/user/login',logindetails)
     .then((response)=>{
         alert(response.data.message)
-        window.location.href = "expense.html";
+        localStorage.setItem('token', response.data.token)
+       window.location.href = "expense.html";
     }).catch((err)=>{
 
         document.body.innerHTML = document.body.innerHTML + "<h4> user doesn't match </h4>"

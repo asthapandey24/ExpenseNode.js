@@ -9,7 +9,7 @@ var cors = require('cors');
 const sequelize = require('./util/database.js');
 
 const User = require('./models/createtable.js');
-
+const expensedata = require('./models/expensetable.js')
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -17,6 +17,10 @@ app.use(cors());
 
 app.use( '/user',router);
 app.use('/expensetable', expenseRouter)
+
+User.hasMany(expensedata)
+expensedata.belongsTo(User)
+
 
 // without routing testing
 
@@ -31,7 +35,8 @@ app.use('/expensetable', expenseRouter)
 
 
 
-    sequelize.sync().then((result)=>{
+    sequelize.sync()
+    .then((result)=>{
         console.log("-------"+result);
         app.listen(3000);
     }).catch(err=>{
