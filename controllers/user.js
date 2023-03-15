@@ -34,8 +34,8 @@ const jwt = require('jsonwebtoken');
 
    }
 
-   function generateToken(id, name){
-    return jwt.sign({userId: id , name: name} , 'mySecretKey')
+   function generateToken(id, name ){
+    return jwt.sign({userId: id , name: name } , 'mySecretKey')
    }
 
 
@@ -66,4 +66,4 @@ const jwt = require('jsonwebtoken');
        }catch(err){
       res.status(500).json({message: err, success: false})
       }
-      }
+    }
