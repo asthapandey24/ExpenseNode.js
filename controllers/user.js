@@ -34,8 +34,8 @@ const jwt = require('jsonwebtoken');
 
    }
 
-   function generateToken(id, name ){
-    return jwt.sign({userId: id , name: name } , 'mySecretKey')
+   function generateToken(id, name, ispremiumuser ){
+    return jwt.sign({userId: id , name: name, ispremiumuser } , 'mySecretKey')
    }
 
 
@@ -51,7 +51,7 @@ const jwt = require('jsonwebtoken');
         if(user.length>0){
          bcrypt.compare(password, user[0].password, (err, response)=>{
         if(response == true){
-           res.status(200).json({success: true, message: 'user logged in successfully', token: generateToken(user[0].id, user[0].name)})
+           res.status(200).json({success: true, message: 'user logged in successfully', token: generateToken(user[0].id, user[0].name, user[0].ispremiumuser)})
           }
         else if(err){
                 return res.status(500).json({message: 'something went wrong'})

@@ -18,6 +18,7 @@ const Order = require('./models/order.js');
 const router =require('./routes/router.js');
 const expenseRouter = require('./routes/expenseroute.js')
 const purchaseRoutes = require('./routes/purchase.js')
+const premiumFeatureRoutes = require('./routes/premiumFeature.js')
 
 const app=express();
 
@@ -33,7 +34,7 @@ app.use(bodyParser.json());
 app.use( '/user',router);
 app.use('/expensetable', expenseRouter)
 app.use('/purchase', purchaseRoutes)
-//app.use('/premium', premiumFeatureRoutes)
+app.use('/premium', premiumFeatureRoutes)
 
 User.hasMany(expensedata)
 expensedata.belongsTo(User)
