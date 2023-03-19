@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize');
 
+
 const sequelize = require('../util/database.js');
 
 const User = sequelize.define('user',{
@@ -24,7 +25,11 @@ const User = sequelize.define('user',{
   },
   ispremiumuser:{ 
     type: Sequelize.BOOLEAN
-  }
+  },
+   totalExpenses: {
+     type: Sequelize.INTEGER,
+   defaultValue: 0
+   }
 });
 
 module.exports = User;
