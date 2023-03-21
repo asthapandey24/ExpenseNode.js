@@ -1,30 +1,37 @@
 
 const expensedata = require('../models/expensetable.js');
 const User = require('../models/createtable.js')
+const sequelize = require('../util/database.js')
 
- exports.postAdduser = (req,res,next)=>{          
+ exports.postAdduser = async(req,res,next)=>{   
+  const t =  await sequelize.transaction()      
    const { expense, discription, category } = req.body;
 
    if(expense == undefined || expense.length === 0 ){
       return res.status(400).json({success: false, message: 'Parameters missing'})
  }
-      
-       expensedata.create({expense, discription, category,userId: req.user.id}).then(expenses =>{
+      try{
+     const data =  await expensedata.create({expense, discription, category,userId: req.user.id, }, {transaction: t})
       const TotalExpense = Number(req.user.totalExpenses) + Number(expense)
         console.log(TotalExpense)
-       User.update({
+        await User.update({
         totalExpenses: TotalExpense
        },{
-        where: {id: req.user.id}
-       }).then(async()=>{
-        res.status(200).json({details: expenses})
-       }).catch(async(err) =>{
-        return res.status(500).json({success: false, error: err})
+        where: {id: req.user.id},
+        transaction: t
        })
-      })
-      .catch(err => {
+       try{
+        await t.commit()
+        res.status(200).json({details: data})
+       }catch(err){
+       await t.rollback()
         return res.status(500).json({success: false, error: err})
-      })
+       }
+    
+      }catch (err) {
+       await t.rollback()
+        return res.status(500).json({success: false, error: err})
+      }
      }
 
 
@@ -46,19 +53,33 @@ const User = require('../models/createtable.js')
 // // }
 
 
-
-
-
-
-
-
-
   exports.deleteuser = async(req, res) =>{
-//      //console.log(req.params.id)
+    const t =  await sequelize.transaction()  
+    try{
     var user_Id = (req.params.id);
-//   //console.log(user_Id);
-//    //console.log(user_Id.typeOf())
-    await expensedata.destroy({where: {id:user_Id , userId: req.user.id}})
-      res.status(200);
+   let Datatobedeleted = await expensedata.findAll({where: {id: req.params.id}, transaction: t})
+    console.log(Datatobedeleted)
+     await expensedata.destroy({where: {id:user_Id , userId: req.user.id}, transaction: t} )
+
+    const NewTotalExpenses = Number(req.user.totalExpenses) - Number(Datatobedeleted[0].dataValues.expense)
+    console.log(NewTotalExpenses)
+     await  User.update({
+    totalExpenses: NewTotalExpenses
+   },{
+    where: { id: req.user.id},
+      transaction: t
+   })
+   try{
+    await t.commit()
+    res.status(200).json({msg : 'successful'})
+   }catch  (err){
+   await t.rollback()
+    return res.status(500).json({success: false, error: err})
    }
 
+  }catch (err){
+   await t.rollback()
+    return res.status(500).json({success: false, error: err})
+   }
+
+  }

@@ -69,18 +69,16 @@ axios.get('http://localhost:3000/expensetable/get-user', {headers: {"Authorizati
 
 
 function displayUser(details){
-
-
-const parentNode = document.getElementById('Users');
-const childHTML = `<li id = ${details.id} >${details.expense} - ${details.discription} - ${details.category}
-<button onClick = deleteUser('${details.id}')>Delete</button>
-<button onclick = edituser('${details.id}','${details.expense}','${details.discription}')>Edit</button> </li>`
-
-parentNode.innerHTML = parentNode.innerHTML + childHTML;
-
+  const parentNode = document.getElementById('Users');
+  const childHTML = `<li id = ${details.id} >${details.expense} - ${details.discription} - ${details.category}
+  <button onClick = deleteUser('${details.id}')>Delete</button>
+  <button onclick = edituser('${details.id}','${details.expense}','${details.discription}')>Edit</button> </li>`
+  
+  parentNode.innerHTML = parentNode.innerHTML + childHTML;
 
 
 }
+
 
 
 function deleteUser(userId){
@@ -88,6 +86,7 @@ function deleteUser(userId){
  axios.delete(`http://localhost:3000/expensetable/delete-user/${userId}`, {headers:{"Authorization": token}})
  .then((response)=>{
    removeItemfromScreen(userId);
+   showLeaderboard()
    console.log(response)
  })
 .catch((err)=>{
@@ -102,6 +101,7 @@ function removeItemfromScreen(userId){
  
 const elem = document.getElementById(userId)
 parentNode.removeChild(elem)
+
 
 }
 
