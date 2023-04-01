@@ -5,7 +5,7 @@ var cors = require('cors');
 
 const bodyParser=require('body-parser');
 
-//const dotenv = require('dotenv');
+const dotenv = require('dotenv');
 
 
 const sequelize = require('./util/database.js');
@@ -19,14 +19,14 @@ const router =require('./routes/router.js');
 const expenseRouter = require('./routes/expenseroute.js')
 const purchaseRoutes = require('./routes/purchase.js')
 const premiumFeatureRoutes = require('./routes/premiumFeature.js')
-
+const forgotPassword = require('./routes/forgotpassword.js')
 const app=express();
 
 app.use(cors());
 
-//dotenv.config();
+dotenv.config();
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 
@@ -35,6 +35,7 @@ app.use( '/user',router);
 app.use('/expensetable', expenseRouter)
 app.use('/purchase', purchaseRoutes)
 app.use('/premium', premiumFeatureRoutes)
+app.use('/password', forgotPassword)
 
 User.hasMany(expensedata)
 expensedata.belongsTo(User)
@@ -58,7 +59,7 @@ Order.belongsTo(User)
 
     sequelize.sync()
     .then((result)=>{
-        console.log("-------"+result);
+     //   console.log("-------"+result);
         app.listen(3000);
     }).catch(err=>{
         console.log(err);

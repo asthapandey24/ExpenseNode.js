@@ -17,3 +17,7 @@ function login(event){
     })
 
 }
+
+function forgotpassword() {
+    window.location.href = "forgot.html"
+}
