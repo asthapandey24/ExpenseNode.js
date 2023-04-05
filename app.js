@@ -3,7 +3,7 @@ const express=require('express');
 
 var cors = require('cors');
 
-const bodyParser=require('body-parser');
+//const bodyParser=require('body-parser');
 
 const dotenv = require('dotenv');
 
@@ -13,6 +13,7 @@ const sequelize = require('./util/database.js');
 const User = require('./models/createtable.js');
 const expensedata = require('./models/expensetable.js')
 const Order = require('./models/order.js');
+const forgetPasswordRequest = require('./models/forgotpassword.js');
 
 
 const router =require('./routes/router.js');
@@ -26,9 +27,9 @@ app.use(cors());
 
 dotenv.config();
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
+//app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.json());
+app.use(express.json());
 
 
 app.use( '/user',router);
@@ -42,6 +43,9 @@ expensedata.belongsTo(User)
 
 User.hasMany(Order);
 Order.belongsTo(User)
+
+User.hasMany(forgetPasswordRequest);
+forgetPasswordRequest.belongsTo(User);  
 
 
 // without routing testing

@@ -6,9 +6,12 @@ function forgotpassword(event){
         email: form.get("email"),
     }
     console.log(Resetpassword)
-    axios.post('http://localhost:3000/password/forgotpassword',Resetpassword)
+      axios.post('http://localhost:3000/password/forgotpassword',Resetpassword)
     .then((response)=>{
-        alert(response.data)
+        alert(response)
+      //  console.log(userid.data.FormData);
+    //  localStorage.setItem("forgetuserid",userid.data.Resetpassword);
+
     }).catch((err)=>{
 
         document.body.innerHTML = document.body.innerHTML + "<h4> user doesn't match </h4>"
