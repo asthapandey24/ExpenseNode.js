@@ -61,7 +61,7 @@ const sequelize = require('../util/database.js')
     console.log(Datatobedeleted)
      await expensedata.destroy({where: {id:user_Id , userId: req.user.id}, transaction: t} )
 
-    const NewTotalExpenses = Number(req.user.totalExpenses) - Number(Datatobedeleted[0].dataValues.expense)
+    const NewTotalExpenses = Number(req.user.totalExpenses) - Number(Datatobedeleted[0].expense)////
     console.log(NewTotalExpenses)
      await  User.update({
     totalExpenses: NewTotalExpenses

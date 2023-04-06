@@ -1,3 +1,6 @@
+
+const token = localStorage.getItem('token')
+
 function expenseStorage(event){
     event.preventDefault();
     const expense = event.target.expense.value;
@@ -10,7 +13,7 @@ function expenseStorage(event){
     }
 
 console.log(myObj)
-const token = localStorage.getItem('token')
+//const token = localStorage.getItem('token')
 
 
 
@@ -46,7 +49,7 @@ function parseJwt (token) {
 
 
 window.addEventListener('DOMContentLoaded', (event) => { 
-  const token = localStorage.getItem('token')
+ // const token = localStorage.getItem('token')
   const decodeToken =  parseJwt(token)
   const ispremiumuser = decodeToken.ispremiumuser
   if(ispremiumuser){
@@ -82,7 +85,7 @@ function displayUser(details){
 
 
 function deleteUser(userId){
-  const token = localStorage.getItem('token')
+  //const token = localStorage.getItem('token')
  axios.delete(`http://localhost:3000/expensetable/delete-user/${userId}`, {headers:{"Authorization": token}})
  .then((response)=>{
    removeItemfromScreen(userId);
@@ -118,7 +121,7 @@ function showLeaderboard(){
     inputElement.type = "button"
     inputElement.value = 'Show Leaderboard'
     inputElement.onclick = async() => {
-        const token = localStorage.getItem('token')
+     //   const token = localStorage.getItem('token')
         const userLeaderBoardArray = await axios.get('http://localhost:3000/premium/showLeaderBoard', { headers: {"Authorization" : token} })
         console.log(userLeaderBoardArray)
 
@@ -136,13 +139,30 @@ function showLeaderboard(){
 
 
 
+  function download(){
+    axios.get('http://localhost:3000/user/download', { headers: {"Authorization" : token} })
+    .then((response) => {
+        if(response.status === 201){
+            //the bcakend is essentially sending a download link
+            //  which if we open in browser, the file would download
+            var a = document.createElement("a");
+            a.href = response.data.fileUrl;
+            a.download = 'myexpense.csv';
+            a.click();
+        } else {
+            throw new Error(response.data.message)
+        }
 
-
+    })
+    .catch((err) => {
+        showError(err)
+    });
+}
 
 // integeration with razorpay code ********************************************************
 
    document.getElementById('rzp-button1').onclick = async function (event) {
-    const token = localStorage.getItem('token')
+   // const token = localStorage.getItem('token')
     const response  = await axios.get('http://localhost:3000/purchase/premiummembership', { headers: {"Authorization" : token} });
     console.log(response);
     var options =
