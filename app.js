@@ -14,13 +14,14 @@ const User = require('./models/createtable.js');
 const expensedata = require('./models/expensetable.js')
 const Order = require('./models/order.js');
 const forgetPasswordRequest = require('./models/forgotpassword.js');
+const downloadmodels = require('./models/downloaddetail.js');
 
 
 const router =require('./routes/router.js');
-const expenseRouter = require('./routes/expenseroute.js')
-const purchaseRoutes = require('./routes/purchase.js')
-const premiumFeatureRoutes = require('./routes/premiumFeature.js')
-const forgotPassword = require('./routes/forgotpassword.js')
+const expenseRouter = require('./routes/expenseroute.js');
+const purchaseRoutes = require('./routes/purchase.js');
+const premiumFeatureRoutes = require('./routes/premiumFeature.js');
+const forgotPassword = require('./routes/forgotpassword.js');
 const app=express();
 
 app.use(cors());
@@ -48,6 +49,8 @@ User.hasMany(forgetPasswordRequest);
 forgetPasswordRequest.belongsTo(User);  
 
 
+User.hasMany(downloadmodels);
+downloadmodels.belongsTo(User);
 // without routing testing
 
 // app.post('/user/signUp',async(req,res,next)=>{    

@@ -55,6 +55,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   if(ispremiumuser){
       showPremiumuserMessage()
       showLeaderboard()
+
   }
 
 axios.get('http://localhost:3000/expensetable/get-user', {headers: {"Authorization": token}})
@@ -90,6 +91,8 @@ function deleteUser(userId){
  .then((response)=>{
    removeItemfromScreen(userId);
    showLeaderboard()
+   
+  
    console.log(response)
  })
 .catch((err)=>{
@@ -139,15 +142,16 @@ function showLeaderboard(){
 
 
 
+
   function download(){
-    axios.get('http://localhost:3000/user/download', { headers: {"Authorization" : token} })
+    axios.get('http://localhost:3000/expensetable/download', { headers: {"Authorization" : token} })
     .then((response) => {
         if(response.status === 201){
             //the bcakend is essentially sending a download link
             //  which if we open in browser, the file would download
             var a = document.createElement("a");
             a.href = response.data.fileUrl;
-            a.download = 'myexpense.csv';
+            a.download = 'myexpense.txt';
             a.click();
         } else {
             throw new Error(response.data.message)
@@ -157,7 +161,55 @@ function showLeaderboard(){
     .catch((err) => {
         showError(err)
     });
-}
+
+  }
+
+
+    async function downloadfiledata(){
+
+     try{
+    const downloaddetail = await axios.get('http://localhost:3000/expensetable/downloadfiledata', { headers: {"Authorization" : token} })
+    
+        console.log(downloaddetail)
+      var downloadElem = document.getElementById('downloadedfile')
+      downloadElem.innerHTML += '<h1> All Downloads </<h1>'
+      for(let i =0; i<=downloaddetail.data.downloadFileData.length; i++){
+          downloadElem.innerHTML =  `<li>downloadDate - ${downloaddetail.data.downloadFileData[i].downloaddate}
+          URL - ${downloaddetail.data.downloadFileData[i].filename} 
+          <button onClick = downloadFile('${downloaddetail.data.downloadFileData[i].filename}')>download</button></li>`
+      }
+    
+
+    } catch(err){
+      console.log(err)
+    }
+
+
+      }
+    
+
+    
+
+      
+
+     
+     function downloadFile(fileUrl) {
+      var url = fileUrl; // replace with your file URL
+      var a = document.createElement('a');
+      a.href = url;
+      a.download = 'Expense.pdf'; // replace with your desired file name
+      a.click();
+      
+
+    }
+
+
+
+
+
+
+
+
 
 // integeration with razorpay code ********************************************************
 
