@@ -1,6 +1,6 @@
 
 const token = localStorage.getItem('token')
-
+const pagination = document.getElementById('pagination')
 function expenseStorage(event){
     event.preventDefault();
     const expense = event.target.expense.value;
@@ -14,6 +14,25 @@ function expenseStorage(event){
 
 console.log(myObj)
 //const token = localStorage.getItem('token')
+
+const expenses= axios.get(`http://localhost:4000/getexpensedata?page=${page}`,{headers:{"Authorization":token}});
+        showPagination(
+            expenses.data.currentPage,
+            expenses.data.hasNextPage,
+            expenses.data.nextPage,
+            expenses.data.hasPreviousPage,
+            expenses.data.previousPage,
+            expenses.data.lastPage)
+          //  table.innerHTML="";
+        for (let index = 0; index < expenses.data.users.length; index++) {
+        display(expenses.data.users[index]);
+        }
+ // console.log(expensedata);
+
+
+
+
+
 
 
 
@@ -48,8 +67,10 @@ function parseJwt (token) {
 
 
 
-window.addEventListener('DOMContentLoaded', (event) => { 
+window.addEventListener('DOMContentLoaded',async(event) => { 
  // const token = localStorage.getItem('token')
+ const page = 1;
+
   const decodeToken =  parseJwt(token)
   const ispremiumuser = decodeToken.ispremiumuser
   if(ispremiumuser){
@@ -58,18 +79,34 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
   }
 
-axios.get('http://localhost:3000/expensetable/get-user', {headers: {"Authorization": token}})
-  .then((response) =>{
-   console.log(response)
-   for(var i=0; i< response.data.details.length; i++){
-       displayUser(response.data.details[i])
+ const expense =await axios.get(`http://localhost:3000/expensetable/get-user?page=${page}`, {headers: {"Authorization": token}})
+ console.log(expense)
+ 
+ // .then((response) =>{
+  //  console.log(response)
+  //  //listProducts(response.data.products)
+  //  showPagination(response.data)
+  //  for(var i=0; i< response.data.users.length; i++){
+  //      displayUser(response.data.users[i])
+  //  }
+  // })
+  // .catch((error)=>{
+  //   console.log(error)
+  // })
+//  
+showPagination(
+  expense.data.currentPage,
+  expense.data.hasNextPage,
+  expense.data.nextPage,
+  expense.data.hasPreviousPage,
+  expense.data.previousPage,
+  expense.data.lastPage)
+
+   for (let i = 0; i < expense.data.users.length; i++) {
+    displayUser(expense.data.users[i]);
    }
   })
-  .catch((error)=>{
-    console.log(error)
-  })
- 
-});    
+   
 
 
 function displayUser(details){
@@ -202,6 +239,73 @@ function showLeaderboard(){
       
 
     }
+
+
+function showPagination({
+  currentPage,
+  hasNextPage,
+  nextPage,
+  hasPreviousPage,
+  previousPage,
+  lastPage
+}){
+pagination.innerHTML = '';
+if(hasPreviousPage){
+const btn2 = document.createElement('button')
+btn2.innerHTML = previousPage
+btn2.addEventListener('click', function(event){
+  event.preventDefault()
+  getProducts(previousPage)
+})
+pagination.appendChild(btn2)
+}
+const btn1 = document.createElement('button')
+btn1.innerHTML = `<h3>${currentPage}</h3>`
+btn1.addEventListener('click', function(event){
+event.preventDefault()
+getProducts(currentPage)
+})
+pagination.appendChild(btn1)
+if(hasNextPage){
+const btn3 = document.createElement('button')
+btn3.innerHTML = nextPage
+btn3.addEventListener('click', function(event){
+  event.preventDefault()
+ getProducts(nextPage)
+})
+pagination.appendChild(btn3)
+}
+}
+
+ async function getProducts(page){
+     
+      const expense = await axios.get(`http://localhost:3000/expensetable/get-user?page=${page}`,{headers:{"Authorization": token}})
+ console.log(expense.data)
+      // .then((response)=>{
+//  listProducts(response.data.products)
+//  showPagination(response.data)
+// }).catch((err)=>{
+//   console.log(err)
+// })
+for(let i=0; i<expense.data.users.length; i++){
+  displayUser(expense.data.users[i]);
+}
+
+showPagination(
+           expense.data.currentPage,
+            expense.data.hasNextPage,
+            expense.data.nextPage,
+            expense.data.hasPreviousPage,
+            expense.data.previousPage,
+             expense.data.lastPage
+             
+           )
+    
+
+}
+
+
+
 
 
 

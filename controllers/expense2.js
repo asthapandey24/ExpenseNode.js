@@ -79,11 +79,36 @@ exports.downloadexpense = async(req,res)=>{
      }
 
 
-     exports.getAdduser = async(req, res, next)=>{
 
-      const users =  await expensedata.findAll({where: {userId: req.user.id}})
-      res.status(200).json({details: users})
-   }
+     var ITEMS_PER_PAGE =6;
+     exports.getAdduser = async(req, res, next)=>{
+      
+      const pageNumber = +req.query.page || 1;
+      const TotalProduct = await expensedata.count({where: {userId: req.user.id}})
+      .then(async(TotalProduct)=>{
+
+      console.log(TotalProduct)
+      const users =  await expensedata.findAll({where: {userId: req.user.id}
+      ,offset:(pageNumber-1)*ITEMS_PER_PAGE,
+        limit: ITEMS_PER_PAGE }) 
+        if(users.length>0 && users!==null && users!==undefined){
+
+        
+      res.status(200).json({success:true,msg:"Record Fetch successfully",users,ispremiumuser:req.user.ispremium,
+      currentPage:pageNumber,
+      hasNextPage:ITEMS_PER_PAGE*pageNumber<TotalProduct,
+      nextPage:parseInt(pageNumber)+1,
+      hasPreviousPage:pageNumber>1,
+      previousPage:pageNumber-1,
+      lastPage:Math.ceil(TotalProduct/ITEMS_PER_PAGE)
+        });
+        }else if(users.length===0){
+          res.status(200).json({success:true,msg:"No Record Found",users,ispremiumuser:req.user.ispremium});
+      }
+
+
+      })
+    }
 
 // // exports.getAdduser = (req, res)=> {
     
