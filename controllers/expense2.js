@@ -80,11 +80,13 @@ exports.downloadexpense = async(req,res)=>{
 
 
 
-     var ITEMS_PER_PAGE =6;
+    // const ITEMS_PER_PAGE=parseInt(req.query.pagesize)
      exports.getAdduser = async(req, res, next)=>{
       
-      const pageNumber = +req.query.page || 1;
-      const TotalProduct = await expensedata.count({where: {userId: req.user.id}})
+      const ITEMS_PER_PAGE=parseInt(req.query.param2)
+      console.log(req.query.param2)
+      const pageNumber=parseInt(req.query.param1)
+      const TotalProduct =  expensedata.count({where: {userId: req.user.id}})
       .then(async(TotalProduct)=>{
 
       console.log(TotalProduct)

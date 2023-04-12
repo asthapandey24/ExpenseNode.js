@@ -26,14 +26,29 @@
         <button id="rzp-button1">Buy premium</button>
         <button onclick="download()" id="downloadexpense">Download File</button>
         <button onclick="downloadfiledata()" id="downloadexpenseAllFile">All Downloaded File</button>
+         
+        <form id="form2">
+        <p id="msg"></p>
+        Rows per pages <select id="rowPerPage">
+            <option >Row Size</option>
+            <option value="5" >5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+           </select>
+
+        </form>
+
+
+
+
+
+
         <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
         <ul id="Users"></ul>
         <ul id="leaderboard"></ul>
         <ul id="downloadedfile"></ul>
-        <div>
-         <button id="pagination"></button>
-        </div>
-
+        <button id="pagination"></button> 
         <script src=" https://cdnjs.cloudflare.com/ajax/libs/axios/1.2.2/axios.min.js"></script>
          <script src="expense.js"></script>
 

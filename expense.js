@@ -1,6 +1,17 @@
 
-const token = localStorage.getItem('token')
-const pagination = document.getElementById('pagination')
+const token = localStorage.getItem('token');
+const pagination = document.getElementById('pagination');
+const selectElement = document.getElementById('rowPerPage');
+console.log(selectElement.value)
+// const selectedOption = selectElement.selectedOptions[0];
+// console.log(`Selected option: ${selectedOption.value}`);  
+// const rowsize=selectedOption.value;
+//const objUrlParams = new URLSearchParams(window.location.serach);
+
+
+
+
+
 function expenseStorage(event){
     event.preventDefault();
     const expense = event.target.expense.value;
@@ -15,24 +26,30 @@ function expenseStorage(event){
 console.log(myObj)
 //const token = localStorage.getItem('token')
 
-const expenses= axios.get(`http://localhost:4000/getexpensedata?page=${page}`,{headers:{"Authorization":token}});
-        showPagination(
-            expenses.data.currentPage,
-            expenses.data.hasNextPage,
-            expenses.data.nextPage,
-            expenses.data.hasPreviousPage,
-            expenses.data.previousPage,
-            expenses.data.lastPage)
-          //  table.innerHTML="";
-        for (let index = 0; index < expenses.data.users.length; index++) {
-        display(expenses.data.users[index]);
-        }
- // console.log(expensedata);
 
+selectElement.addEventListener("change", async () => {
 
-
-
-
+  const selectedOption = selectElement.selectedOption[0];
+    console.log(`Selected option: ${selectedOption.value}`);  
+    const rowsize=selectedOption.value;
+    //objUrlParams.get('pagesize')
+    localStorage.setItem('pagesize',rowsize);
+    const pageno = localStorage.getItem('pageno')
+    const expenseiii= await axios.get(`http://localhost:3000/expensetable/get-user?param1=${pageno}&param2=${rowsize}`,{headers:{"Authorization":token}});
+    console.log(expenseiii);/////////
+    showPagination(
+        expenseiii.data.currentPage,
+        expenseiii.data.hasNextPage,
+        expenseiii.data.nextPage,
+        expenseiii.data.hasPreviousPage,
+        expenseiii.data.previousPage,
+        expenseiii.data.lastPage)
+      //  table.innerHTML="";
+    for (let index = 0; index < expenseiii.data.users.length; index++) {
+    display(expenseiii.data.users[index]);
+    }
+  
+})
 
 
 
@@ -45,6 +62,7 @@ axios.post('http://localhost:3000/expensetable/add-user',myObj,{headers: {"Autho
    document.body.innerHTML = document.body.innerHTML + "<h4> Something went wrong </h4>"
    console.log(err)
 })
+
 
 
 
@@ -69,8 +87,11 @@ function parseJwt (token) {
 
 window.addEventListener('DOMContentLoaded',async(event) => { 
  // const token = localStorage.getItem('token')
- const page = 1;
-
+ const objUrlParams = new URLSearchParams(window.location.serach);
+ 
+ var pageno = objUrlParams.get("pageno") || 1
+localStorage.setItem('pageno', pageno)
+var pagesize = localStorage.getItem('pagesize') || 5
   const decodeToken =  parseJwt(token)
   const ispremiumuser = decodeToken.ispremiumuser
   if(ispremiumuser){
@@ -79,8 +100,8 @@ window.addEventListener('DOMContentLoaded',async(event) => {
 
   }
 
- const expense =await axios.get(`http://localhost:3000/expensetable/get-user?page=${page}`, {headers: {"Authorization": token}})
- console.log(expense)
+ const expenseiii = await axios.get(`http://localhost:3000/expensetable/get-user?param1=${pageno}&param2=${pagesize}`, {headers: {"Authorization": token}})
+ console.log(expenseiii)
  
  // .then((response) =>{
   //  console.log(response)
@@ -95,15 +116,15 @@ window.addEventListener('DOMContentLoaded',async(event) => {
   // })
 //  
 showPagination(
-  expense.data.currentPage,
-  expense.data.hasNextPage,
-  expense.data.nextPage,
-  expense.data.hasPreviousPage,
-  expense.data.previousPage,
-  expense.data.lastPage)
+  expenseiii.data.currentPage,
+  expenseiii.data.hasNextPage,
+  expenseiii.data.nextPage,
+  expenseiii.data.hasPreviousPage,
+  expenseiii.data.previousPage,
+  expenseiii.data.lastPage)
 
-   for (let i = 0; i < expense.data.users.length; i++) {
-    displayUser(expense.data.users[i]);
+   for (let i = 0; i < expenseiii.data.users.length; i++) {
+    displayUser(expenseiii.data.users[i]);
    }
   })
    
@@ -241,68 +262,70 @@ function showLeaderboard(){
     }
 
 
-function showPagination({
+function showPagination(
   currentPage,
   hasNextPage,
-  nextPage,
-  hasPreviousPage,
-  previousPage,
-  lastPage
-}){
-pagination.innerHTML = '';
-if(hasPreviousPage){
-const btn2 = document.createElement('button')
-btn2.innerHTML = previousPage
-btn2.addEventListener('click', function(event){
-  event.preventDefault()
-  getProducts(previousPage)
-})
-pagination.appendChild(btn2)
-}
-const btn1 = document.createElement('button')
-btn1.innerHTML = `<h3>${currentPage}</h3>`
-btn1.addEventListener('click', function(event){
-event.preventDefault()
-getProducts(currentPage)
-})
-pagination.appendChild(btn1)
-if(hasNextPage){
-const btn3 = document.createElement('button')
-btn3.innerHTML = nextPage
-btn3.addEventListener('click', function(event){
-  event.preventDefault()
- getProducts(nextPage)
-})
-pagination.appendChild(btn3)
-}
-}
+   nextPage,
+   hasPreviousPage,
+   previousPage,
+   lastPage
+  )
+{
+  pagination.innerHTML = '';
+  if(hasPreviousPage){
+  const btn2 = document.createElement('button')
+  btn2.innerHTML = previousPage
+  btn2.addEventListener('click', function(event){
+    event.preventDefault()
+    getProducts(previousPage)
+ })
+  pagination.appendChild(btn2)
 
- async function getProducts(page){
-     
-      const expense = await axios.get(`http://localhost:3000/expensetable/get-user?page=${page}`,{headers:{"Authorization": token}})
- console.log(expense.data)
-      // .then((response)=>{
-//  listProducts(response.data.products)
-//  showPagination(response.data)
-// }).catch((err)=>{
-//   console.log(err)
-// })
-for(let i=0; i<expense.data.users.length; i++){
-  displayUser(expense.data.users[i]);
-}
+  }
 
-showPagination(
-           expense.data.currentPage,
-            expense.data.hasNextPage,
-            expense.data.nextPage,
-            expense.data.hasPreviousPage,
-            expense.data.previousPage,
-             expense.data.lastPage
-             
-           )
+  const btn1 = document.createElement('button')
+  btn1.innerHTML = `<h3>${currentPage}</h3>`
+  btn1.addEventListener('click', function(event){
+  event.preventDefault()
+  localStorage.setItem('pageno',currentPage)
+  getProducts(currentPage)
+  })
+  pagination.appendChild(btn1)
+
+  if(hasNextPage){
+    pagination.innerHTML='';
+ const btn3 = document.createElement('button')
+ btn3.innerHTML = nextPage
+ btn3.addEventListener('click', function(event){
+   event.preventDefault()
+   getProducts(nextPage)
+ })
+ pagination.appendChild(btn3)
+ }
+  }
+
+  async function getProducts(page){
+   var rowsize = localStorage.getItem('pagesize')
+  localStorage.setItem('pageno', page)
+   pagination.innerHTML='';
+ const expenseiii = await axios.get(`http://localhost:3000/expensetable/get-user?param1=${page}&param2=${rowsize}`,{headers:{"Authorization": token}})  
+ console.log(expenseiii.data)
+
+  for(let i=0; i< expenseiii.data.users.length; i++){
+    displayUser(expenseiii.data.users[i]);
+  }
+
+  showPagination(
+              expenseiii.data.currentPage,
+              expenseiii.data.hasNextPage,
+              expenseiii.data.nextPage,
+              expenseiii.data.hasPreviousPage,
+              expenseiii.data.previousPage,
+              expenseiii.data.lastPage        
+               )
     
 
-}
+ }
 
 
 

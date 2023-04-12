@@ -11,6 +11,8 @@ router.post('/add-user', userAuthentication.authenticate,controllerexpense.postA
 router.get('/get-user', userAuthentication.authenticate,controllerexpense.getAdduser);
 
 
+router.get('/get-user/:pageno',userAuthentication.authenticate,controllerexpense.getAdduser);
+
 
 router.delete('/delete-user/:id', userAuthentication.authenticate,controllerexpense.deleteuser);
 
