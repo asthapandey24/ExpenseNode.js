@@ -2,7 +2,8 @@
  const Sequelize=require('../util/database.js');
  const bcrpt=require('bcrypt');
  const Forgetpassword=require('../models/forgotpassword.js');
-  
+ const dotenv = require('dotenv');
+ dotenv.config();
  const uuid=require('uuid');
  const jwt=require('jsonwebtoken');
 // const { and } = require('sequelize');
@@ -90,8 +91,8 @@ const transporter = nodemailer.createTransport({
  host: 'smtp.ethereal.email',
   port: 587,
   auth: {
-      user: 'cora.abshire79@ethereal.email',
-      pass: 'GTDNjm9amb6wyPrVB1'//
+      user: process.env.USER_NAME,
+      pass: process.env.USER_PASSWORD//
         
   }
 });

@@ -1,5 +1,6 @@
 const path = require('path')
 const express=require('express');
+const helmet = require('helmet')
 
 var cors = require('cors');
 
@@ -27,7 +28,7 @@ const app=express();
 app.use(cors());
 
 dotenv.config();
-
+app.use(helmet());
 //app.use(bodyParser.urlencoded({ extended: true }));
 //app.use(bodyParser.json());
 app.use(express.json());
@@ -67,7 +68,7 @@ downloadmodels.belongsTo(User);
     sequelize.sync()
     .then((result)=>{
      //   console.log("-------"+result);
-        app.listen(3000);
+        app.listen(process.env.PORT|| 3000);
     }).catch(err=>{
         console.log(err);
     });
