@@ -9,6 +9,7 @@ function login(event){
     .then((response)=>{
         alert(response.data.message)
         localStorage.setItem('token', response.data.token)
+        
        window.location.href = "expense.html";
     }).catch((err)=>{
 
