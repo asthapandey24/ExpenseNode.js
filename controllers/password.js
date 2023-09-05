@@ -1,5 +1,7 @@
- const sequelize=require('sequelize');
- const Sequelize=require('../util/database.js');
+
+
+//const sequelize=require('sequelize');
+ //const Sequelize=require('../util/database.js');
  const bcrpt=require('bcrypt');
  const Forgetpassword=require('../models/forgotpassword.js');
  const dotenv = require('dotenv');

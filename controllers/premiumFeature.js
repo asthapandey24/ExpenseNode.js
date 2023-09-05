@@ -1,13 +1,15 @@
+
+const mongoose=require('mongoose');
+const mongoconnection=require('../util/database');
 const User = require('../models/createtable.js');
 const Expense = require('../models/expensetable.js');
-const sequelize = require('../util/database.js');
 const e = require('express');
 
-const getUserLeaderBoard = async (req, res) => {
-    try{
+exports.getUserLeaderBoard = (async (req, res) => {
+    //try{
         
             
-             const leaderboardofusers = await User.findAll({
+          //   const leaderboardofusers = await User.findAll({
             //     attributes: ['id', 'name',[sequelize.fn('sum', sequelize.col('expense')), 'total_cost'] ],
             //      include: [
             //          {
@@ -16,11 +18,11 @@ const getUserLeaderBoard = async (req, res) => {
             //         }
             //      ],
             //      group:['user.id'],
-                order:[['totalExpenses', 'DESC']]
+            //    order:[['totalExpenses', 'DESC']]
     
-            })
+           // })
            
-            res.status(200).json(leaderboardofusers)
+          //  res.status(200).json(leaderboardofusers)
 
         
     
@@ -46,12 +48,29 @@ const getUserLeaderBoard = async (req, res) => {
         // UserLeaderBoardDetails.sort((a,b)=> b.total_cost - a.total_cost )
         // res.status(200).json(UserLeaderBoardDetails)
     
-} catch (err){
-    console.log(err)
-    res.status(500).json(err)
-}
-}
+//} catch (err){
+  //  console.log(err)
+  //  res.status(500).json(err)
+//}
 
-module.exports = {
-    getUserLeaderBoard
-}
+// module.exports = {
+//     getUserLeaderBoard
+// }
+console.log("show leaderboard is calling");
+    try {
+        
+   
+        const leaderedata=await User.find().sort({totalexpense:1}).exec();
+        console.log("leadedata",leaderedata.length);
+        if(leaderedata.length>=1)
+        {
+             res.status(200).json({success:true,msg:"Record Fetch successfully",leaderedata,ispremiumuser:req.user.ispremium});
+        }else if(leaderedata.length<=0){
+            res.status(401).json({success:true,msg:"No Record Found",leaderedata,ispremiumuser:req.user.ispremium});
+        }
+    } catch (error) {
+        res.status(400).json({success:false,msg:"Something went wrong in showleadboards"});
+    }
+})
+
+

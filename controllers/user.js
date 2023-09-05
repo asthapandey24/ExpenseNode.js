@@ -1,3 +1,4 @@
+const mongoconnection = require ("mongoose");
 
 const User = require('../models/createtable.js');
 const bcrypt = require('bcrypt');
@@ -25,7 +26,7 @@ const jwt = require('jsonwebtoken');
         const saltrounds = 10
         bcrypt.hash(password, saltrounds, async(err, hash)=>{
           console.log(err)
-       await User.create({name, email, password: hash})
+         await User.create({name, email, password: hash})
         res.status(201).json({msg : 'successful'})
         })
        }catch(err){
@@ -47,11 +48,13 @@ const jwt = require('jsonwebtoken');
       res.status(400).json({msg: 'something is missing'})
     }
     console.log(password)
-     const user = await User.findAll({where: {email}})
-        if(user.length>0){
-         bcrypt.compare(password, user[0].password, (err, response)=>{
+     const user = await User.findOne({
+      email: email,
+     })
+        if(user != null){
+         bcrypt.compare(password, user.password, (err, response)=>{
         if(response == true){
-           res.status(200).json({success: true, message: 'user logged in successfully', token: generateToken(user[0].id, user[0].name, user[0].ispremiumuser)})
+           res.status(200).json({success: true, message: 'user logged in successfully', token: generateToken(user.id, user.name, user.ispremiumuser)})
           }
         else if(err){
                 return res.status(500).json({message: 'something went wrong'})

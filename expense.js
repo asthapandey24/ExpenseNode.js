@@ -55,8 +55,12 @@ selectElement.addEventListener("change", async () => {
 
 axios.post('http://localhost:3000/expensetable/add-user',myObj,{headers: {"Authorization": token}} )
 .then((response)=>{
-   displayUser(response.data.details)
+  
+  const newExpenseId = response.data.id;
+   displayUser({id: newExpenseId, ...myObj})
    console.log(response) 
+   
+  
 })
 .catch((err)=>{
    document.body.innerHTML = document.body.innerHTML + "<h4> Something went wrong </h4>"
@@ -87,7 +91,7 @@ function parseJwt (token) {
 
 window.addEventListener('DOMContentLoaded',async(event) => { 
  // const token = localStorage.getItem('token')
- const objUrlParams = new URLSearchParams(window.location.serach);
+ const objUrlParams = new URLSearchParams(window.location.search);
  
  var pageno = objUrlParams.get("pageno") || 1
 localStorage.setItem('pageno', pageno)
@@ -130,21 +134,30 @@ showPagination(
    
 
 
-function displayUser(details){
-  const parentNode = document.getElementById('Users');
-  const childHTML = `<li id = ${details.id} >${details.expense} - ${details.discription} - ${details.category}
-  <button onClick = deleteUser('${details.id}')>Delete</button>
-  <button onclick = edituser('${details.id}','${details.expense}','${details.discription}')>Edit</button> </li>`
   
-  parentNode.innerHTML = parentNode.innerHTML + childHTML;
 
 
-}
+    function displayUser(details) {
+    
+        const parentNode = document.getElementById('Users');
+        const childHTML = `<li id=${details._id}>${details.expense} - ${details.discription} - ${details.category}
+        <button onClick=deleteUser('${details._id}')>Delete</button>
+        <button onclick=edituser('${details._id}','${details.expense}','${details.discription}')>Edit</button> </li>`;
+      
+        parentNode.innerHTML = parentNode.innerHTML + childHTML;
+      } 
+    
+    
+
 
 
 
 function deleteUser(userId){
   //const token = localStorage.getItem('token')
+  if (!userId) {
+    console.error('userId is undefined or empty');
+    return;
+  }
  axios.delete(`http://localhost:3000/expensetable/delete-user/${userId}`, {headers:{"Authorization": token}})
  .then((response)=>{
    removeItemfromScreen(userId);
@@ -161,13 +174,26 @@ function deleteUser(userId){
 }
 
 
-function removeItemfromScreen(userId){
+// function removeItemfromScreen(userId){
  
-const elem = document.getElementById(userId)
-parentNode.removeChild(elem)
+// const elem = document.getElementById(userId)
+// parentNode.removeChild(elem)
 
 
+// }
+
+function removeItemfromScreen(userId) {
+  const elem = document.getElementById(userId);
+  if (elem) {
+    elem.parentNode.removeChild(elem);
+  } else {
+    console.error(`Element with id ${userId} not found`);
+  }
 }
+
+
+
+
 
 
 function edituser(userId,expense,discription){
